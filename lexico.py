@@ -16,7 +16,6 @@ reserved = {
     'else': 'ELSE',
     'for': 'FOR',
     'func': 'FUNC',
-    'map' : 'MAP',
     'package': 'PACKAGE',
     'import' : 'IMPORT',
     'return': 'RETURN',
@@ -52,8 +51,7 @@ tokens = [
     'MOD',
     'DPLUS',
     'DMINUS',
-    'COLONEQ',
-    'exp1'
+    'COLONEQ'
 ] 
 
 # Regras para expressões regulares 
@@ -98,7 +96,7 @@ def t_NUMBER(t):
 
 # String 
 def t_STRING(t):
-    r'\".*\"'
+    r'\".*?\"'
     return t
   
 # Função para pular linha
@@ -119,14 +117,14 @@ def t_error(t):
 t_ignore  = ' \t'
 
 #TESTE
-data = 'OIIUUU  12 * 4 \"kamila" '
+data = ' 12 * 4  '
 
 lexer = lex.lex()
 lexer.input(data)
 
-while True:
-    tok = lexer.token()
-    if not tok:
-        break  
-    print(tok)
+# while True:
+#     tok = lexer.token()
+#     if not tok:
+#         break  
+#     print(tok)
     
