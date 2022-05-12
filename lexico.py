@@ -9,7 +9,7 @@ reserved = {
     'var': 'VAR',
     'string': 'STRING',
     'bool' : 'BOOL',
-    'struct': 'STRUCT',
+    #'struct': 'STRUCT',
     'true': 'TRUE',
     'false': 'FALSE',
     'if': 'IF',
@@ -20,7 +20,7 @@ reserved = {
     'import' : 'IMPORT',
     'return': 'RETURN',
     'range': 'RANGE',
-    'type': 'TYPE',
+    'type': 'TYPE'
   
 }
 
@@ -43,10 +43,10 @@ tokens = [
     'LESS',
     'GREATER_EQUAL',
     'LESS_EQUAL',
+    'NOT',
     'AND',
     'OR',
     'SEMICOLON',
-    'COLON',
     'COMMA',
     'MOD',
     'DPLUS',
@@ -68,12 +68,12 @@ t_GREATER       = r'\>'
 t_LESS          = r'\<'
 t_GREATER_EQUAL = r'\>='
 t_LESS_EQUAL    = r'\<='
+t_NOT           = r'\!'
 t_AND           = r'\&&'
 t_OR            = r'\|\|'
 t_LCHAVES       = r'\{'
 t_RCHAVES       = r'\}'
 t_SEMICOLON     = r'\;'
-t_COLON         = r'\:'
 t_COMMA         = r'\,'
 t_MOD           = r'\%'
 t_DPLUS         = r'\+\+'
@@ -117,6 +117,7 @@ def t_error(t):
 t_ignore  = ' \t'
 
 #TESTE
+
 data = ' 12 * 4  '
 
 lexer = lex.lex()
