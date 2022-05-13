@@ -9,7 +9,6 @@ reserved = {
     'var': 'VAR',
     'string': 'STRING',
     'bool' : 'BOOL',
-    #'struct': 'STRUCT',
     'true': 'TRUE',
     'false': 'FALSE',
     'if': 'IF',
@@ -18,6 +17,7 @@ reserved = {
     'func': 'FUNC',
     'package': 'PACKAGE',
     'import' : 'IMPORT',
+    'break'  : 'BREAK',
     'return': 'RETURN',
     'range': 'RANGE',
     'type': 'TYPE'
@@ -118,7 +118,7 @@ t_ignore  = ' \t'
 
 #TESTE
 
-data = ' 12 * 4  '
+data = '12 * 4 '
 
 lexer = lex.lex()
 lexer.input(data)

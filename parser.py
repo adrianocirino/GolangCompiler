@@ -25,7 +25,7 @@ def p_funcdecls(p):
     '''funcdecls : funcdecl
                  | funcdecl funcdecls'''
     pass
-
+# func k () 
 def p_signature(p):
   '''signature : LPAREN sigparams RPAREN 
                | LPAREN sigparams RPAREN funcreturn 
@@ -74,11 +74,12 @@ def p_statement2(p):
                 | IF exp statement1 ELSE statement2
                 | IF LPAREN exp RPAREN statement1 ELSE statement2'''
   pass
+  
 # for{}
 # for i < 5{}
-# for for i := 0; i < 15; i++
-# for range sharks 
-# for indice, valor := range serie
+# for i := 0; i < 15; i++
+# for range lista 
+# for indice, valor := range lista
 def p_for(p):
   '''for : FOR
          | FOR exp 
@@ -90,15 +91,14 @@ def p_for(p):
   
 #atribuição de duas formas = ou :=
 def p_declaration(p):
-    '''declaration : ID type
-                   | ID type ASSIGN exp
-                   | ID type COLONEQ exp'''
+    '''declaration : VAR ID type 
+                   | VAR ID type ASSIGN exp
+                   | VAR ID type COLONEQ exp'''
     pass
   
 def p_type(p):
     '''type : INT
             | STRING
-            | VAR
             | BOOL'''
     pass
 
@@ -118,7 +118,7 @@ def p_exp1(p):
 
 #ver precedencia 
   # () [] 
-  # Operadores unario  ++ --  incremento decremento
+  # Operadores unario ! ++ --  not incremento decremento
   # * / % mult div modulo
   # + - adiçao sub
   # < > <= >= menor maior 
@@ -184,11 +184,14 @@ def p_return(p):
     '''return : RETURN exp
               | RETURN'''
     pass
+  
+def p_break(p):
+    '''break : BREAK'''
+    pass
+  
 def p_error(p):
     print("Syntax error in input!")
 
-#FOR estrutura
-#RANGE
 
 parser = yacc.yacc()
 parser.parse(debug = True)
