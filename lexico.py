@@ -18,10 +18,7 @@ reserved = {
     'package': 'PACKAGE',
     'import' : 'IMPORT',
     'break'  : 'BREAK',
-    'return': 'RETURN',
-    'range': 'RANGE',
-    'type': 'TYPE'
-  
+    'return': 'RETURN'  
 }
 
 # Lista nomes de Tokens 
@@ -51,7 +48,9 @@ tokens = [
     'MOD',
     'DPLUS',
     'DMINUS',
-    'COLONEQ'
+    'COLONEQ',
+    'NEWLINE',
+    'DOT'
 ] 
 
 # Regras para expressões regulares 
@@ -79,6 +78,7 @@ t_MOD           = r'\%'
 t_DPLUS         = r'\+\+'
 t_DMINUS        = r'\-\-'
 t_COLONEQ       = r'\:\='
+t_DOT           = r'\.'
 
 tokens = tokens + list(reserved.values())
 
@@ -98,10 +98,10 @@ def t_NUMBER(t):
 def t_STRING(t):
     r'\".*?\"'
     return t
-  
+
 # Função para pular linha
 def t_newline(t):
-    r'\n+'
+    r'\n\s*'
     t.lexer.lineno += len(t.value)
 
 # Função para comentarios
@@ -118,14 +118,8 @@ t_ignore  = ' \t'
 
 #TESTE
 
-data = '12 * 4 '
+#data = '12 * 4 '
 
-lexer = lex.lex()
-lexer.input(data)
+#lexer = lex.lex()
+#lexer.input(data)
 
-# while True:
-#     tok = lexer.token()
-#     if not tok:
-#         break  
-#     print(tok)
-    

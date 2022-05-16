@@ -5,6 +5,7 @@
 import ply.yacc as yacc
 from lexico import *
 
+# abstrata             #concreta
 def p_programaGO(p):
   '''programaGO : defpackage defimport funcdecls'''
   pass
@@ -25,7 +26,7 @@ def p_funcdecls(p):
     '''funcdecls : funcdecl
                  | funcdecl funcdecls'''
     pass
-# func k () 
+
 def p_signature(p):
   '''signature : LPAREN sigparams RPAREN 
                | LPAREN sigparams RPAREN funcreturn 
@@ -50,50 +51,41 @@ def p_body(p):
 
 def p_stms(p):
     '''stms : statement 
-            | statement stms'''
+            | statement NEWLINE stms
+            | statement NEWLINE'''
     pass
   
 def p_statement(p):
-    '''statement : statement1
-                 | statement2'''
+    '''statement : statement1'''
     pass
-#não é obrigatorio parenteses, é obrigatorio colchetes
+
+#duvida statement1
 def p_statement1(p):
-  '''statement1 : IF LPAREN exp RPAREN statement1 ELSE statement1
-                | IF exp statement1 ELSE statement1
+  '''statement1 : IF LPAREN exp RPAREN body ELSE body
+                | IF exp body ELSE body
+                | IF exp body
+                | IF LPAREN exp RPAREN body 
                 | declaration
                 | for
-                | statement1
-                | statement2
-                | return'''
+                | callFunc
+                | callFuncPS
+                | return
+                | break'''
   pass
 
-def p_statement2(p):
-  '''statement2 : IF LPAREN exp RPAREN statement 
-                | IF exp statement 
-                | IF exp statement1 ELSE statement2
-                | IF LPAREN exp RPAREN statement1 ELSE statement2'''
-  pass
-  
-# for{}
-# for i < 5{}
-# for i := 0; i < 15; i++
-# for range lista 
-# for indice, valor := range lista
 def p_for(p):
-  '''for : FOR
-         | FOR exp 
-         | FOR exp SEMICOLON exp SEMICOLON exp
-         | FOR RANGE exp 
-         | FOR exp COMMA exp ASSIGN RANGE exp''' 
+  '''for : FOR body
+         | FOR exp body
+         | FOR exp SEMICOLON exp SEMICOLON exp body''' 
   pass
 
-  
-#atribuição de duas formas = ou :=
 def p_declaration(p):
     '''declaration : VAR ID type 
                    | VAR ID type ASSIGN exp
-                   | VAR ID type COLONEQ exp'''
+                   | VAR ID type COLONEQ exp
+                   | VAR ID type SEMICOLON
+                   | VAR ID type ASSIGN exp SEMICOLON
+                   | VAR ID type COLONEQ exp SEMICOLON'''
     pass
   
 def p_type(p):
@@ -106,18 +98,8 @@ def p_exp_exp1(p):
   '''exp : exp1'''
   pass
   
-def p_exp1(p):
-  '''exp1 : NUMBER
-          | STRING
-          | ID 
-          | TRUE
-          | FALSE
-          | LPAREN exp RPAREN
-          | exp2'''
-  pass
-
-#ver precedencia 
-  # () [] 
+ #precedencia 
+  # () 
   # Operadores unario ! ++ --  not incremento decremento
   # * / % mult div modulo
   # + - adiçao sub
@@ -125,28 +107,27 @@ def p_exp1(p):
   # == =! igual diferente
   # &  and
   # | or
-  # &&
-  # || 
   # = =+ =- atribuiçao 
-  # , 
+
+def p_exp1(p):
+    ''' exp1 : exp1 ASSIGN exp2
+             | exp1 COLONEQ exp2
+             | exp2'''
+    pass
 
 def p_exp2(p):
-  '''exp2 : exp2 DPLUS
-          | exp2 DMINUS
-          | NOT exp2
-          | exp3'''
-  pass
-
+    '''exp2 : exp2 OR exp3
+            | exp3'''
+    pass
+  
 def p_exp3(p):
-  '''exp3 : exp3 TIMES exp4
-          | exp3 DIVIDE exp4
-          | exp3 MOD exp4
-          | exp4'''
-  pass
-
+    '''exp3 : exp3 AND exp4
+            | exp4'''
+    pass
+#parei aqui
 def p_exp4(p):
-  '''exp4 : exp4 PLUS exp5
-          | exp4 MINUS exp5
+  '''exp4 : exp4 EQUALS exp5
+          | exp4 DIFFERENT exp5
           | exp5'''
   pass
 
@@ -159,42 +140,70 @@ def p_exp5(p):
   pass
 
 def p_exp6(p):
-  '''exp6 : exp6 EQUALS exp7
-          | exp6 DIFFERENT exp7
+  '''exp6 : exp6 PLUS exp7
+          | exp6 MINUS exp7
           | exp7'''
   pass
 
 def p_exp7(p):
-    '''exp7 : exp7 AND exp8
-            | exp8'''
-    pass
+  '''exp7 : exp7 TIMES exp8
+          | exp7 DIVIDE exp8
+          | exp7 MOD exp8
+          | exp8'''
+  pass
 
 def p_exp8(p):
-    '''exp8 : exp8 OR exp9
-            | exp9'''
-    pass
-  
+  '''exp8 : exp8 DPLUS
+          | exp8 DMINUS
+          | NOT exp8
+          | exp9'''
+  pass
+
 def p_exp9(p):
-    ''' exp9 : exp9 ASSIGN exp1
-             | exp9 COLONEQ exp1
-             | exp1'''
-    pass
-  
+  '''exp9 : NUMBER
+          | STRING
+          | ID 
+          | TRUE
+          | FALSE
+          | LPAREN exp RPAREN
+          | exp'''
+  pass
+
 def p_return(p):
     '''return : RETURN exp
-              | RETURN'''
+              | RETURN
+              | RETURN exp SEMICOLON
+              | RETURN SEMICOLON'''
     pass
   
 def p_break(p):
-    '''break : BREAK'''
+    '''break : BREAK
+             | BREAK SEMICOLON'''
+    pass
+
+def p_callFunc(p):
+    '''callFunc : ID LPAREN params RPAREN
+                | ID LPAREN RPAREN
+                | ID LPAREN params RPAREN SEMICOLON
+                | ID LPAREN RPAREN SEMICOLON'''
+    pass
+
+def p_callFuncP(p):
+    '''callFuncPS : ID DOT ID LPAREN params RPAREN
+                  | ID DOT ID LPAREN RPAREN
+                  | ID DOT ID LPAREN params RPAREN SEMICOLON
+                  | ID DOT ID LPAREN RPAREN SEMICOLON'''
+    pass
+def p_params(p):
+    '''params : exp COMMA params
+              | exp'''
     pass
   
 def p_error(p):
     print("Syntax error in input!")
 
-
-parser = yacc.yacc()
-parser.parse(debug = True)
+#parser = yacc.yacc()
+#parser.parse(debug = True)
 
 
 
