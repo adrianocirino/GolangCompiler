@@ -15,7 +15,7 @@ def p_defpackage(p):
   pass
 
 def p_defimport(p):
-  '''defimport : IMPORT ID'''
+  '''defimport : IMPORT STRING'''
   pass
   
 def p_funcdecl(p):
@@ -41,7 +41,7 @@ def p_sigparams(p):
 
 def p_funcreturn(p):
   '''funcreturn : type
-                | LPAREN type RPAREN '''
+                | LPAREN type RPAREN'''
   pass
 
 def p_body(p):
@@ -51,6 +51,7 @@ def p_body(p):
 
 def p_stms(p):
     '''stms : statement 
+            | statement stms
             | statement NEWLINE stms
             | statement NEWLINE'''
     pass
@@ -59,12 +60,10 @@ def p_statement(p):
     '''statement : statement1'''
     pass
 
-#duvida statement1
+#duvida statement1  IF LPAREN exp RPAREN body ELSE body IF LPAREN exp RPAREN body 
 def p_statement1(p):
-  '''statement1 : IF LPAREN exp RPAREN body ELSE body
-                | IF exp body ELSE body
+  '''statement1 : IF exp body ELSE body
                 | IF exp body
-                | IF LPAREN exp RPAREN body 
                 | declaration
                 | for
                 | callFunc
@@ -155,20 +154,19 @@ def p_exp7(p):
 def p_exp8(p):
   '''exp8 : exp8 DPLUS
           | exp8 DMINUS
-          | NOT exp8
           | exp9'''
   pass
 
 def p_exp9(p):
-  '''exp9 : NUMBER
+  '''exp9 : NOT exp9
+          | NUMBER
           | STRING
           | ID 
           | TRUE
           | FALSE
-          | LPAREN exp RPAREN
-          | exp'''
+          | LPAREN exp RPAREN'''
   pass
-
+# | 
 def p_return(p):
     '''return : RETURN exp
               | RETURN
@@ -188,7 +186,7 @@ def p_callFunc(p):
                 | ID LPAREN RPAREN SEMICOLON'''
     pass
 
-def p_callFuncP(p):
+def p_callFuncPS(p):
     '''callFuncPS : ID DOT ID LPAREN params RPAREN
                   | ID DOT ID LPAREN RPAREN
                   | ID DOT ID LPAREN params RPAREN SEMICOLON
