@@ -11,20 +11,22 @@ def p_programaGO(p):
   pass
 
 def p_defpackage(p):
-  '''defpackage : PACKAGE ID'''
+  '''defpackage : PACKAGE ID NEWLINE'''
   pass
 
 def p_defimport(p):
-  '''defimport : IMPORT STRING'''
+  '''defimport : IMPORT STRING NEWLINE'''
   pass
-  
+
 def p_funcdecl(p):
-    '''funcdecl : FUNC ID signature body'''
+    '''funcdecl : FUNC ID signature NEWLINE body NEWLINE
+                | FUNC ID signature body
+                | FUNC ID signature body NEWLINE'''
     pass
   
 def p_funcdecls(p):
-    '''funcdecls : funcdecl
-                 | funcdecl funcdecls'''
+    '''funcdecls : funcdecl 
+                 | funcdecl funcdecls '''
     pass
 
 def p_signature(p):
@@ -45,13 +47,12 @@ def p_funcreturn(p):
   pass
 
 def p_body(p):
-  '''body : LCHAVES stms RCHAVES
-          | LCHAVES RCHAVES'''
+  '''body : LCHAVES  NEWLINE stms  RCHAVES
+          | LCHAVES  NEWLINE RCHAVES'''
   pass
 
 def p_stms(p):
     '''stms : statement 
-            | statement stms
             | statement NEWLINE stms
             | statement NEWLINE'''
     pass
@@ -60,7 +61,6 @@ def p_statement(p):
     '''statement : statement1'''
     pass
 
-#duvida statement1  IF LPAREN exp RPAREN body ELSE body IF LPAREN exp RPAREN body 
 def p_statement1(p):
   '''statement1 : IF exp body ELSE body
                 | IF exp body
@@ -70,7 +70,7 @@ def p_statement1(p):
                 | callFuncPS
                 | return
                 | break'''
-  pass
+  pass1111
 
 def p_for(p):
   '''for : FOR body

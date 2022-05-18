@@ -100,9 +100,10 @@ def t_STRING(t):
     return t
 
 # Função para pular linha
-def t_newline(t):
+def t_NEWLINE(t):
     r'\n\s*'
     t.lexer.lineno += len(t.value)
+    return t
 
 # Função para comentarios
 def t_coment(t):
