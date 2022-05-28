@@ -17,21 +17,20 @@ class programaGOCONCRETA(programaGO):
     return visitor.visitprogramaGOCONCRETA(self)
 
 #abstrata Package
-class defpackage(mataclass=ABCMeta):
+class defpackage(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
 
-#concreta duvida passa o package?
+#concreta 
 class defpackageCONCRETA(defpackage):
-  def __init__(self, package , id):
-    self.package = package
+  def __init__(self, id):
     self.id = id
   def accept(self, visitor):
-    return visitor.visitpackageCONCRETA(self)
+    return visitor.visitdefpackageCONCRETA(self)
 
 #abstrata Import
-class defimport(mataclass=ABCMeta):
+class defimport(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
@@ -44,7 +43,7 @@ class defimportCONCRETA(defimport):
     return visitor.visitdefimportCONCRETA(self)
 
 #abstrata funções
-class funcdecl(mataclass=ABCMeta):
+class funcdecl(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
@@ -60,7 +59,7 @@ class funcdecltCONCRETA(funcdecl):
     return visitor.visitfuncdecltCONCRETA(self)
 
 #abstrata
-class funcdecls(mataclass=ABCMeta):
+class funcdecls(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
@@ -80,7 +79,7 @@ class funcdeclsCONCRETA2(funcdecls):
     return visitor.visitfuncdeclsCONCRETA2(self)
 
 #abstrata assinatura de função
-class signature(mataclass=ABCMeta):
+class signature(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
@@ -106,7 +105,7 @@ class signatureCONCRETA3(signature):
      return visitor.visitsignatureCONCRETA3(self)
 
 #abstrata paramentros de função
-class sigparams(mataclass=ABCMeta):
+class sigparams(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
@@ -128,7 +127,7 @@ class sigparamsCONCRETA2(sigparams):
     return visitor.visitsigparamsCONCRETA2(self)
 
 #abstrata returno da função
-class funcreturn(mataclass=ABCMeta):
+class funcreturn(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
@@ -141,7 +140,7 @@ class funcreturnCONCRETA(funcreturn):
     return visitor.visitfuncreturnCONCRETA(self)
 
 #abstrata corpo da função
-class body(mataclass=ABCMeta):
+class body(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
@@ -154,7 +153,7 @@ class bodyCONCRETA(body):
     return visitor.visitbodyCONCRETA(self)
 
 #abstrata comandos
-class stms(mataclass=ABCMeta):
+class stms(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
@@ -174,7 +173,7 @@ class stmsCONCRETA2(stms):
     return visitor.visitstmsCONCRETA2(self)
 
 #abstrata comandos
-class statement(mataclass=ABCMeta):
+class statement(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
@@ -187,75 +186,46 @@ class statementCONCRETA(statement):
     return visitor.visitstatementCONCRETA(self)
 
 #abstrata comandos
-class statement1(mataclass=ABCMeta):
+class statement1(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
 
 #concreta comando IF
-class statement1CONCRETAIF(statement1):
+class ifCONCRETA(statement1):
   def __init__(self,  exp , body, body2):
     self.exp = exp
     self.body = body
     self.body2 = body2
   def accept(self, visitor):
-    return visitor.visitstatement1CONCRETAIF(self)
+    return visitor.visitifCONCRETA(self)
 
- #duvidas comandos Declaração
-class statement1CONCRETADE(statement1):
-  def __init__(self, declaration):
-    self.declaration = declaration
+#concreta declaração
+
+class declarationCONCRETA(statement1):
+  def __init__(self, var, id, type, exp):
+    self.var = var
+    self.id = id
+    self.type = type
+    self.exp = exp
   def accept(self, visitor):
-    return visitor.visitstatement1CONCRETADE(self)
-
-#Chamada de função
-class statement1CONCRETACALL(statement1):
-  def __init__(self, callFunc):
-    self.callFunc = callFunc
-  def accept(self, visitor):
-    return visitor.visitstatement1CONCRETACALL(self)
-
-class statement1CONCRETACALLPS(statement1):
-  def __init__(self, callFuncPS):
-    self.callFunc = callFuncPS
-  def accept(self, visitor):
-    return visitor.visitstatement1CONCRETACALLPS(self)
-
-# return duvidas
-class statement1CONCRETARETURN(statement1):
-  def __init__(self, return1):
-    self.return1 = return1
-  def accept(self, visitor):
-    return visitor.visitstatement1CONCRETARETURN(self)
-
-#break duvidas
-class statement1CONCRETABREAK(statement1):
-  def __init__(self, break1):
-    self.break1 = break1
-  def accept(self, visitor):
-    return visitor.visitstatement1CONCRETABREAK(self)
-
-#abstrata FOR
-class forGO(mataclass=ABCMeta):
-  @abstractmethod
-  def accept(self, visitor):
-      pass 
-
+    return visitor.visitdeclarationCONCRETA(self)
+    
 #concretas FOR
-class forGOCONCRETA(forGO):
+class forGOCONCRETA(statement1):
   def __init__(self, body):
     self.body = body
   def accept(self, visitor):
     return visitor.visitforGOCONCRETA(self)
 
-class forGOCONCRETA2(forGO):
+class forGOCONCRETA2(statement1):
   def __init__(self, exp, body):
     self.exp = exp
     self.body = body
   def accept(self, visitor):
     return visitor.visitforGOCONCRETA2(self)
 
-class forGOCONCRETA3(forGO):
+class forGOCONCRETA3(statement1):
   def __init__(self, exp1, exp2, exp3, body):
     self.exp1 = exp1
     self.exp2 = exp2
@@ -264,32 +234,37 @@ class forGOCONCRETA3(forGO):
   def accept(self, visitor):
     return visitor.visitforGOCONCRETA2(self)
 
-#abstrata Declaração
-class declaration(mataclass=ABCMeta):
-  @abstractmethod
-  def accept(self, visitor):
-      pass 
-
-#concretas Declaração
-class declarationCONCRETA(forGO):
-  def __init__(self, var, id, type):
-    self.var = var
+#Concreta Call
+class callFuncCONCRETA(statement1):
+  def __init__(self, id, params):
     self.id = id
-    self.type = type
+    self.params = params
   def accept(self, visitor):
-    return visitor.visitdeclarationCONCRETA(self)
+    return visitor.visitcallFuncCONCRETA(self) 
 
-class declarationCONCRETA2(forGO):
-  def __init__(self, var, id, type, exp):
-    self.var = var
-    self.id = id
-    self.type = type
+#concreta call PS
+class callFuncPSCONCRETA(statement1):
+  def __init__(self, id1, id2 ,params):
+    self.id1 = id1
+    self.id2 = id2
+    self.params = params
+  def accept(self, visitor):
+    return visitor.visitcallFuncPSCONCRETA(self) 
+    
+#concreta return
+class returnCONCRETA(statement1):
+  def __init__(self, exp):
     self.exp = exp
   def accept(self, visitor):
-    return visitor.visitdeclarationCONCRETA2(self)
+    return visitor.visitreturnCONCRETA(self)  
+
+#concreta break 
+class breakCONCRETA(statement1):
+  def accept(self, visitor):
+    return visitor.visitbreakCONCRETA(self)
 
  #abstrata Type
-class type(mataclass=ABCMeta):
+class type(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
@@ -315,27 +290,34 @@ class typeCONCRETA3(type):
   def accept(self, visitor):
     return visitor.visittypeCONCRETA3(self)   
 
-#abstrata Expressões
-class exp(mataclass=ABCMeta):
+#expressões abstrata
+class exp(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
 
 #concretas
+class expCONCRETA(exp):
+  def __init__(self, exp1):
+    self.exp1 = exp1
+  def accept(self, visitor):
+    return visitor.visitexp(self)
+
 class expASSIGN(exp):
   def __init__(self, exp1, exp2):
     self.exp1 = exp1
     self.exp2 = exp2
   def accept(self, visitor):
     return visitor.visitexpASSIGN(self)
-    
-#duvidas se cria concreta dessa regra exp2
-class expASSIGN2(exp):
-  def __init__(self, exp2):
+
+class expCOLONEQ(exp):
+  def __init__(self, exp1, exp2):
+    self.exp1 = exp1
     self.exp2 = exp2
   def accept(self, visitor):
-    return visitor.visitexpASSIGN2(self)   
-
+    return visitor.visitexpASSIGN(self)
+    
+ 
 class expOR(exp):
   def __init__(self, exp1, exp2):
     self.exp1 = exp1
@@ -343,25 +325,13 @@ class expOR(exp):
   def accept(self, visitor):
     return visitor.visitexpOR(self)
 
-class expOR2(exp):
-  def __init__(self, exp2):
-    self.exp2 = exp2
-  def accept(self, visitor):
-    return visitor.visitexpOR2(self) 
-
 class expAND(exp):
   def __init__(self, exp1, exp2):
     self.exp1 = exp1
     self.exp2 = exp2
   def accept(self, visitor):
     return visitor.visitexpAND(self)
-
-class expAND2(exp):
-  def __init__(self, exp2):
-    self.exp2 = exp2
-  def accept(self, visitor):
-    return visitor.visitexpAND2(self) 
-
+    
 class expEQUALS(exp):
   def __init__(self, exp1, exp2):
     self.exp1 = exp1
@@ -375,12 +345,6 @@ class expDIFFERENT(exp):
     self.exp2 = exp2
   def accept(self, visitor):
     return visitor.visitexpDIFFERENT(self)
-
-class expDIFFERENT2(exp):
-  def __init__(self, exp2):
-    self.exp2 = exp2
-  def accept(self, visitor):
-    return visitor.visitexpDIFFERENT2(self) 
 
 class expLESS(exp):
   def __init__(self, exp1, exp2):
@@ -410,12 +374,6 @@ class expGREATER_EQUAL(exp):
   def accept(self, visitor):
     return visitor.visitexpGREATER_EQUAL(self)
 
-class expGREATER_EQUAL2(exp):
-  def __init__(self, exp2):
-    self.exp2 = exp2
-  def accept(self, visitor):
-    return visitor.visitexpGREATER_EQUAL2(self) 
-
 class expPLUS(exp):
   def __init__(self, exp1, exp2):
     self.exp1 = exp1
@@ -429,12 +387,6 @@ class expMINUS(exp):
     self.exp2 = exp2
   def accept(self, visitor):
     return visitor.visitexpMINUS(self)
-
-class expMINUS2(exp):
-  def __init__(self, exp2):
-    self.exp2 = exp2
-  def accept(self, visitor):
-    return visitor.visitexpMINUS2(self) 
 
 class expTIMES(exp):
   def __init__(self, exp1, exp2):
@@ -457,12 +409,6 @@ class expMOD(exp):
   def accept(self, visitor):
     return visitor.visitexpMOD(self)
 
-class expMOD2(exp):
-  def __init__(self, exp2):
-    self.exp2 = exp2
-  def accept(self, visitor):
-    return visitor.visitexpMOD2(self) 
-
 class expDPLUS(exp):
   def __init__(self, exp2):
     self.exp2 = exp2
@@ -475,13 +421,6 @@ class expDMINUS(exp):
   def accept(self, visitor):
     return visitor.visitexpDMINUS(self) 
 
-class expDMINUS2(exp):
-  def __init__(self, exp2):
-    self.exp2 = exp2
-  def accept(self, visitor):
-    return visitor.visitexpDMINUS2(self) 
-
-# DUVIDA EXP9 ULTIMA CAMADA
 class expNOT(exp):
   def __init__(self, exp2):
     self.exp2 = exp2
@@ -518,48 +457,8 @@ class expFALSE(exp):
   def accept(self, visitor):
     return visitor.visitexpFALSE(self) 
 
-#abstrata Return
-class returnAbs(mataclass=ABCMeta):
-  @abstractmethod
-  def accept(self, visitor):
-      pass 
-
-#concreta Return
-class returnCONCRETA(returnAbs):
-  def __init__(self, exp):
-    self.exp = exp
-  def accept(self, visitor):
-    return visitor.visitreturnCONCRETA(self)    
-
-# duvida criar break?
-# abstrata chamada de função
-class callFunc(mataclass=ABCMeta):
-  @abstractmethod
-  def accept(self, visitor):
-      pass 
-
-#concreta chamada de função
-class callFuncCONCRETA(callFunc):
-  def __init__(self, params):
-    self.params = params
-  def accept(self, visitor):
-    return visitor.visitcallFuncCONCRETA(self) 
-
-#abstrata 
-class callFuncPS(mataclass=ABCMeta):
-  @abstractmethod
-  def accept(self, visitor):
-      pass 
-
-#concreta
-class callFuncPSCONCRETA(callFuncPS):
-  def __init__(self, params):
-    self.params = params
-  def accept(self, visitor):
-    return visitor.visitcallFuncPSCONCRETA(self) 
-
 #abstrata paramentros
-class params(mataclass=ABCMeta):
+class params(metaclass=ABCMeta):
   @abstractmethod
   def accept(self, visitor):
       pass 
