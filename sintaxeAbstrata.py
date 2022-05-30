@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from abc import ABCMeta
+from Visitor import visitor 
 
 #abstrata definição do programa
 class programaGO(metaclass=ABCMeta):
@@ -232,7 +233,7 @@ class forGOCONCRETA3(statement1):
     self.exp3 = exp3
     self.body = body
   def accept(self, visitor):
-    return visitor.visitforGOCONCRETA2(self)
+    return visitor.visitforGOCONCRETA3(self)
 
 #Concreta Call
 class callFuncCONCRETA(statement1):
@@ -315,7 +316,7 @@ class expCOLONEQ(exp):
     self.exp1 = exp1
     self.exp2 = exp2
   def accept(self, visitor):
-    return visitor.visitexpASSIGN(self)
+    return visitor.visitexpCOLONEQ(self)
     
  
 class expOR(exp):
@@ -425,7 +426,7 @@ class expNOT(exp):
   def __init__(self, exp2):
     self.exp2 = exp2
   def accept(self, visitor):
-    return visitor.visitexpDMINUS(self) 
+    return visitor.visitexpNOT(self) 
 
 class expNUMBER(exp):
   def __init__(self, number):

@@ -5,6 +5,7 @@
 import ply.yacc as yacc
 from lexico import *
 import sintaxeAbstrata as sa
+import Visitor as vis
 
 # quantidade de paramentros for igual a 3
  # if (len(p) == 3):
@@ -13,8 +14,12 @@ import sintaxeAbstrata as sa
  #        p[0] = [p[1]]
 # abstrata             #concreta
 def p_programaGO(p):
-  '''programaGO : defpackage defimport funcdecls'''
-  p[0] = sa.programaGOCONCRETA(p[1], p[2], p[3])
+  '''programaGO : defpackage defimport funcdecls
+                | NEWLINE defpackage defimport funcdecls'''
+  if(len(p) == 5):
+     p[0] = sa.programaGOCONCRETA(p[2], p[3], p[4])
+  else:
+    p[0] = sa.programaGOCONCRETA(p[1], p[2], p[3])
 
 def p_defpackage(p):
   '''defpackage : PACKAGE ID NEWLINE'''

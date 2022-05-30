@@ -17,4 +17,8 @@ func main()
 '''
 lexer.input(data2)
 parser = yacc.yacc()
-result = parser.parse(debug=True)
+result = parser.parse(debug=False)
+
+# visitor = vis.visitor()
+# for r in result:
+#   r.accept(visitor)
