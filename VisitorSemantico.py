@@ -77,11 +77,10 @@ class GoSemanticVisitor(abstrataVisitor):
       st.addVar(params[k], params[k+1])
     
   def visitsigparamsCONCRETA(self, sigparamsCONCRETA):
-        print(') ', end = '', sep='')
+        return [sigparamsCONCRETA.id, sigparamsCONCRETA.type]
 
   def visitsigparamsCONCRETA2(self, sigparamsCONCRETA2):
-     if(sigparamsCONCRETA2.sigparams != None):
-        sigparamsCONCRETA2.sigparams.accept(self)
+      return sigparamsCONCRETA2.id, sigparamsCONCRETA2.type + sigparamsCONCRETA2.sigParams.accept(self)
 
   def visitfuncreturnCONCRETA(self, funcreturnCONCRETA):
       if(funcreturnCONCRETA!= None):
@@ -105,30 +104,40 @@ class GoSemanticVisitor(abstrataVisitor):
       statementCONCRETA.statement1.accept(self)
 
   def visitifCONCRETA(self, ifCONCRETA):
-    ifCONCRETA.exp.accept(self)
-    ifCONCRETA.body.accept(self)
-    if(ifCONCRETA.body2!=None):
-      ifCONCRETA.body2.accept(self)
-
-  def visitdeclarationCONCRETA(self, declarationCONCRETA):
-    if(declarationCONCRETA.exp!= None):
-      declarationCONCRETA.exp.accept(self)
+        st.beginScope(st.IF)
+        ifCONCRETA.Expression.accept(self)
+        ifCONCRETA.Block.accept(self)
+        st.varCheck(st.endScope())
+        if(ifCONCRETA.body2!=None):
+          ifCONCRETA.body2.accept(self)
+          st.varCheck(st.endScope())
 
   def visitforGOCONCRETA(self, forGOCONCRETA):
-    forGOCONCRETA.body.accept(self)
-    
-  def visitforGOCONCRETA2(self, forGOCONCRETA2):
-    forGOCONCRETA2.exp.accept(self)
-    forGOCONCRETA2.body.accept(self)
+        st.beginScope(st.FOR)
+        forGOCONCRETA.body.accept(self)
+        st.varCheck(st.endScope())
 
+  def visitforGOCONCRETA2(self, forGOCONCRETA2):
+        st.beginScope(st.FOR)
+        forGOCONCRETA2.exp.accept(self)
+        forGOCONCRETA2.body.accept(self)
+        st.varCheck(st.endScope())
+
+  
   def visitforGOCONCRETA3(self, forGOCONCRETA3):
-    forGOCONCRETA3.exp1.accept(self)
-    forGOCONCRETA3.exp2.accept(self)
-    forGOCONCRETA3.exp3.accept(self)
-    forGOCONCRETA3.body.accept(self)
+        st.beginScope(st.FOR)
+        forGOCONCRETA3.exp1.accept(self)
+        forGOCONCRETA3.exp2.accept(self)
+        forGOCONCRETA3.exp3.accept(self)
+        forGOCONCRETA3.body.accept(self)
+        st.varCheck(st.endScope())
 
   def visitcallFuncCONCRETA(self, callFuncCONCRETA):
     callFuncCONCRETA.params.accept(self)
+    
+  def visitdeclarationCONCRETA(self, declarationCONCRETA):
+    if(declarationCONCRETA.exp!= None):
+      declarationCONCRETA.exp.accept(self)
 
   def visitcallFuncPSCONCRETA(self, callFuncPSCONCRETA):
     callFuncPSCONCRETA.params.accept(self)
