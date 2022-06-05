@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from abc import ABCMeta
-from Visitor import visitor 
+from Visitor import Visitor 
 
 #abstrata definição do programa
 class programaGO(metaclass=ABCMeta):
@@ -277,12 +277,13 @@ class typeCONCRETA(type):
   def accept(self, visitor):
     return visitor.visittypeCONCRETA(self)   
 
+
 #concreta STRING
 class typeCONCRETA2(type):
   def __init__(self, string):
     self.string = string
   def accept(self, visitor):
-    return visitor.visittypeCONCRETA2(self)   
+    return visitor.visittypeCONCRETA2(self) 
 
 #concreta BOOL
 class typeCONCRETA3(type):
@@ -290,6 +291,7 @@ class typeCONCRETA3(type):
     self.bool = bool
   def accept(self, visitor):
     return visitor.visittypeCONCRETA3(self)   
+
 
 #expressões abstrata
 class exp(metaclass=ABCMeta):
@@ -317,8 +319,7 @@ class expCOLONEQ(exp):
     self.exp2 = exp2
   def accept(self, visitor):
     return visitor.visitexpCOLONEQ(self)
-    
- 
+  
 class expOR(exp):
   def __init__(self, exp1, exp2):
     self.exp1 = exp1

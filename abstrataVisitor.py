@@ -3,7 +3,7 @@ from abc import ABCMeta
 
 class abstrataVisitor(metaclass = ABCMeta):
 
-     @abstractmethod
+     @abstractmethod 
      def visitprogramaGOCONCRETA (self, programaGO):
          pass
 
@@ -131,6 +131,4 @@ class abstrataVisitor(metaclass = ABCMeta):
      def visitexpOR(self, exp):
          pass
 
-     @abstractmethod 
-     def visittypeCONCRETA3(self, type):
-         pass
+    

@@ -1,14 +1,19 @@
 from abstrataVisitor import abstrataVisitor
-global tab
-tab = 0
+import symbolTable as st
+from Visitor import Visitor
 
-def blank():
-    p = ''
-    for x in range(tab):
-        p = p + ' '
-    return p
+import sintaxeAbstrata as sa
 
-class Visitor (abstrataVisitor):
+def coercion(type1, type2):
+  if (type1 == st.INT and type2 == st.INT):
+      return st.INT
+  else:
+    return None
+
+class GoSemanticVisitor(abstrataVisitor):
+  def __init__(self):
+        self.printer = Visitor()
+        st.beginScope('main')
 
   def visitprogramaGOCONCRETA (self, programaGOCONCRETA):
     programaGOCONCRETA.defpackage.accept(self)
@@ -16,21 +21,15 @@ class Visitor (abstrataVisitor):
     programaGOCONCRETA.funcdecls.accept(self)
 
   def visitdefpackageCONCRETA (self, defpackageCONCRETA):
-    print ('package ', end='', sep='')
-    print(defpackageCONCRETA.id, end = '', sep='')
-    print('')
+    return [defpackageCONCRETA.id, defpackageCONCRETA.type]
 
   def visitdefimportCONCRETA (self, defimportCONCRETA):
-    print ('import ', end='', sep='')
-    print(defimportCONCRETA.string, end = '', sep='')
-    print('')
+    return [defimportCONCRETA.id, defimportCONCRETA.type]
+    
 
   def visitfuncdecltCONCRETA (self, funcdecltCONCRETA):
-    print(funcdecltCONCRETA.func, end = ' ', sep=' ')
-    print(funcdecltCONCRETA.id, end = ' ', sep=' ')
     if (funcdecltCONCRETA.signature != None):
       funcdecltCONCRETA.signature.accept(self)
-    print('()')
     funcdecltCONCRETA.body.accept(self)
 
   def visitfuncdeclsCONCRETA (self, funcdeclsCONCRETA):
@@ -41,43 +40,56 @@ class Visitor (abstrataVisitor):
     funcdeclsCONCRETA2.funcdecls.accept(self)
 
   def visitsignatureCONCRETA (self, signatureCONCRETA):
-      if (signatureCONCRETA.sigparams != None):
-        signatureCONCRETA.sigparams.accept(self)
+      params = {}
+      if (signatureCONCRETA.sigParams!= None):
+        params = signatureCONCRETA.sigParams.accept(self)
+        st.addFunction(signatureCONCRETA.id, params, signatureCONCRETA.type)
+      else:
+        st.addFunction(signatureCONCRETA.id, params, signatureCONCRETA.type)
+      st.beginScope(signatureCONCRETA.id)
+      for k in range(0, len(params), 2):
+        st.addVar(params[k], params[k+1])
+
+    
       
-  def visitsignatureCONCRETA2 (self, signatureCONCRETA2):
-    if (signatureCONCRETA2.sigparams != None):
-      signatureCONCRETA2.sigparams.accept(self)
-      signatureCONCRETA2.funcreturn.accept(self)
+  def visitsignatureCONCRETA2 (self, signatureCONCRETA2):    
+    params = {}
+    if (signatureCONCRETA2.sigParams!= None):
+      params = signatureCONCRETA2.sigParams.accept(self)
+      params = signatureCONCRETA2.funcreturn.accept(self)
+      st.addFunction(signatureCONCRETA2.id, params, signatureCONCRETA2.type)
+    else:
+      st.addFunction(signatureCONCRETA2.id, params, signatureCONCRETA2.type)
+    st.beginScope(signatureCONCRETA2.id)
+    for k in range(0, len(params), 2):
+      st.addVar(params[k], params[k+1])
+      
      
   def visitsignatureCONCRETA3 (self, signatureCONCRETA3):
-    if (signatureCONCRETA3.funcreturn != None):
-      signatureCONCRETA3.funcreturn.accept(self)
+    params = {}
+    if (signatureCONCRETA3.funcreturn!= None):
+      params = signatureCONCRETA3.funcreturn.accept(self)
+      st.addFunction(signatureCONCRETA3.id, params, signatureCONCRETA3.type)
+    else:
+      st.addFunction(signatureCONCRETA3.id, params, signatureCONCRETA3.type)
+    st.beginScope(signatureCONCRETA3.id)
+    for k in range(0, len(params), 2):
+      st.addVar(params[k], params[k+1])
     
   def visitsigparamsCONCRETA(self, sigparamsCONCRETA):
-        print('(', end = '', sep='')
-        print(blank(), sigparamsCONCRETA.id,' ', end = '', sep='')
-        print(sigparamsCONCRETA.type, end = '', sep='')
         print(') ', end = '', sep='')
 
   def visitsigparamsCONCRETA2(self, sigparamsCONCRETA2):
      if(sigparamsCONCRETA2.sigparams != None):
-        print(blank(), sigparamsCONCRETA2.id, '',end = '', sep='')
-        print(sigparamsCONCRETA2.type,' ',end = '', sep='')
         sigparamsCONCRETA2.sigparams.accept(self)
 
   def visitfuncreturnCONCRETA(self, funcreturnCONCRETA):
       if(funcreturnCONCRETA!= None):
-        print(funcreturnCONCRETA.type, end = '', sep='')
+        return [funcreturnCONCRETA.id, funcreturnCONCRETA.type]
 
   def visitbodyCONCRETA(self, bodyCONCRETA):
-    print('')
-    global tab
-    tab =  tab + 3
-    print('{')
     if(bodyCONCRETA.stms!=None): 
       bodyCONCRETA.stms.accept(self)
-    tab =  tab - 3
-    print (blank(), '} ', sep='')
 
   def visitstmsCONCRETA(self, stmsCONCRETA):
    if(stmsCONCRETA.statement!=None):
@@ -93,66 +105,40 @@ class Visitor (abstrataVisitor):
       statementCONCRETA.statement1.accept(self)
 
   def visitifCONCRETA(self, ifCONCRETA):
-    print('')
-    print(blank(), 'if (', end = '', sep='')
     ifCONCRETA.exp.accept(self)
-    print (')', end='', sep='')
     ifCONCRETA.body.accept(self)
     if(ifCONCRETA.body2!=None):
-      print('')
-      print('else')
       ifCONCRETA.body2.accept(self)
 
-  #duvida pode fazer esse if?
   def visitdeclarationCONCRETA(self, declarationCONCRETA):
-    print(blank(), declarationCONCRETA.var,' ', end = '', sep='')
-    print(declarationCONCRETA.id,' ', end = '', sep='')
-    print(declarationCONCRETA.type,' ' ,end = '', sep='')
     if(declarationCONCRETA.exp!= None):
       declarationCONCRETA.exp.accept(self)
 
   def visitforGOCONCRETA(self, forGOCONCRETA):
-    print('')
-    print(blank(), 'for', end='', sep='')
     forGOCONCRETA.body.accept(self)
     
   def visitforGOCONCRETA2(self, forGOCONCRETA2):
-    print('')
-    print(blank(), 'for (', end='', sep='')
     forGOCONCRETA2.exp.accept(self)
-    print (')', end='', sep='')
     forGOCONCRETA2.body.accept(self)
 
   def visitforGOCONCRETA3(self, forGOCONCRETA3):
-    print('')
-    print(blank(), 'for (' , end='', sep='')
     forGOCONCRETA3.exp1.accept(self)
-    print('; ', end='', sep='')
     forGOCONCRETA3.exp2.accept(self)
-    print('; ', end='', sep='')
     forGOCONCRETA3.exp3.accept(self)
-    print (')', end='', sep='')
     forGOCONCRETA3.body.accept(self)
 
   def visitcallFuncCONCRETA(self, callFuncCONCRETA):
-    print(blank(), callFuncCONCRETA.id, end = '', sep='')
     callFuncCONCRETA.params.accept(self)
 
   def visitcallFuncPSCONCRETA(self, callFuncPSCONCRETA):
-    print(blank(), callFuncPSCONCRETA.id1,'.', end = '', sep='')
-    print(callFuncPSCONCRETA.id2, end = '', sep='')
-    print('(', end = '', sep='')
     callFuncPSCONCRETA.params.accept(self)
-    print(')')
 
   def visitreturnCONCRETA(self, returnCONCRETA):
-    print(blank(), 'return', end = '', sep='')
     if(returnCONCRETA.exp!= None):
       returnCONCRETA.exp.accept(self)
-    print('; ', end='', sep='')
 
   def visitbreakCONCRETA(self, breakCONCRETA):
-    print(blank(), 'break;')
+    return [breakCONCRETA.id, breakCONCRETA.type]
   
   def visittypeCONCRETA(self, typeCONCRETA):
     typeCONCRETA.int.accept(self)
@@ -168,132 +154,95 @@ class Visitor (abstrataVisitor):
 
   def visitexpASSIGN(self, expASSIGN):
     expASSIGN.exp1.accept(self)
-    print(' = ', end='')
     expASSIGN.exp2.accept(self)
 
   def visitexpCOLONEQ(self, expCOLONEQ):
     expCOLONEQ.exp1.accept(self)
-    print(' := ', end='')
     expCOLONEQ.exp2.accept(self)
 
   def visitexpOR(self, expOR):
     expOR.exp1.accept(self)
-    print(' || ', end='')
     expOR.exp2.accept(self)
 
   def visitexpAND(self, expAND):
     expAND.exp1.accept(self)
-    print(' && ', end='')
     expAND.exp2.accept(self)
   
   def visitexpEQUALS(self, expEQUALS):
     expEQUALS.exp1.accept(self)
-    print(' == ', end='')
     expEQUALS.exp2.accept(self)
 
   def visitexpDIFFERENT(self, expDIFFERENT):
     expDIFFERENT.exp1.accept(self)
-    print(' != ', end='')
     expDIFFERENT.exp2.accept(self)
 
   def visitexpLESS(self, expLESS):
     expLESS.exp1.accept(self)
-    print(' < ', end='')
     expLESS.exp2.accept(self)
 
   def visitexpGREATER(self, expGREATER):
     expGREATER.exp1.accept(self)
-    print(' > ', end='')
     expGREATER.exp2.accept(self)
 
   def visitexpLESS_EQUAL(self, expLESS_EQUAL):
     expLESS_EQUAL.exp1.accept(self)
-    print(' <= ', end='')
     expLESS_EQUAL.exp2.accept(self)
 
   def visitexpGREATER_EQUAL(self, expGREATER_EQUAL):
     expGREATER_EQUAL.exp1.accept(self)
-    print(' >= ', end='')
     expGREATER_EQUAL.exp2.accept(self)
 
   def visitexpPLUS(self, expPLUS):
     expPLUS.exp1.accept(self)
-    print(' + ', end='')
     expPLUS.exp2.accept(self)
 
   def visitexpMINUS(self, expMINUS):
     expMINUS.exp1.accept(self)
-    print(' - ', end='')
     expMINUS.exp2.accept(self)
 
   def visitexpTIMES(self, expTIMES):
     expTIMES.exp1.accept(self)
-    print(' * ', end='')
     expTIMES.exp2.accept(self)
 
   def visitexpDIVIDE(self, expDIVIDE):
     expDIVIDE.exp1.accept(self)
-    print(' / ', end='')
     expDIVIDE.exp2.accept(self)
 
   def visitexpMOD(self, expMOD):
     expMOD.exp1.accept(self)
-    print(' % ', end='')
     expMOD.exp2.accept(self)
 
   def visitexpDPLUS(self, expDPLUS):
     expDPLUS.exp1.accept(self)
-    print('++ ', end='')
 
   def visitexpDMINUS(self, expDMINUS):
     expDMINUS.exp1.accept(self)
-    print('-- ', end='')
 
   def visitexpNOT(self, expNOT):
-    print('! ', end='')
     expNOT.exp1.accept(self)
 
   def visitexpNUMBER(self, expNUMBER):
-    print(expNUMBER.number, end='')
+    return [expNUMBER.id, expNUMBER.type]
 
   def visitexpSTRING(self, expSTRING):
-    print(expSTRING.string, end='')
+    return [expSTRING.id, expSTRING.type]
     
   def visitexpID(self, expID):
-    print(expID.id, end='')
+    return [expID.id, expID.type]
     
   def visitexpTRUE(self, expTRUE):
-    print(expTRUE.true, end='')
+    return [expTRUE.id, expTRUE.type]
 
   def visitexpFALSE(self, expFALSE):
-    print(expFALSE.false, end='')
+    return [expFALSE.id, expFALSE.type]
 
   def visitparamsCONCRETA(self, paramsCONCRETA):
     paramsCONCRETA.exp.accept(self)
     if( paramsCONCRETA.params!= None):
       paramsCONCRETA.params.accept(self)
-  
-   
-
-
-
-  
-    
-    
-    
-    
-    
-    
-    
-    
 
   
 
-  
-  
+    
 
-  
-        
-
-      
-      
+    

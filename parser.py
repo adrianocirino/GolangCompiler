@@ -6,13 +6,8 @@ import ply.yacc as yacc
 from lexico import *
 import sintaxeAbstrata as sa
 import Visitor as vis
+import VisitorSemantico as vs
 
-# quantidade de paramentros for igual a 3
- # if (len(p) == 3):
- #        p[0] = [p[1]] + p[2] posição do paramentro
- #    else:
- #        p[0] = [p[1]]
-# abstrata             #concreta
 def p_programaGO(p):
   '''programaGO : defpackage defimport funcdecls
                 | NEWLINE defpackage defimport funcdecls'''
@@ -55,13 +50,13 @@ def p_signature(p):
                | LPAREN sigparams RPAREN funcreturn 
                | LPAREN RPAREN
                | LPAREN RPAREN funcreturn '''
-  if(p[2] == 'sigparams'):
+  if(isinstance(p[2], sa.sigparams)):
     p[0] = sa.signatureCONCRETA(p[2])
   elif(len(p) == 5): 
     p[0] = sa.signatureCONCRETA2(p[2], p[4])
- # elif(p[3] == 'funcreturn'):
-    #p[0] = sa.signatureCONCRETA3(p[3])
-  else:
+  elif(len(p) == 4 and isinstance(p[3], sa.funcreturn)):
+    p[0] = sa.signatureCONCRETA3(p[3])
+  elif(len(p) == 2):
     p[0] = sa.signatureCONCRETA(None)
 
 def p_sigparams(p):
@@ -116,21 +111,21 @@ def p_statement1(p):
     p[0] = sa.ifCONCRETA(p[2], p[3], p[4])
   elif(len(p) == 4):
     p[0] = sa.ifCONCRETA(p[2], p[3], None)
-  elif(p[1] == 'declaration'):
-    p[0] = sa.declarationCONCRETA(p[1])
-  elif(p[1] == 'for'):
-    p[0] = sa.forCONCRETA(p[1])
-  elif(p[1] == 'callFunc'):
-    p[0] = sa.callFuncCONCRETAC(p[1])
-  elif(p[1] == 'callFuncPS'):
-    p[0] = sa.callFuncPSCONCRETA(p[1])
-  elif(p[1] == 'return'):
-    p[0] = sa.returnCONCRETA(p[1])
-  elif(p[1] == 'break'):
-    p[0] = sa.breakCONCRETA(p[1])
   else:
-    print('Gerei None', p[1])
-  
+    p[0] = p[1]
+  # elif(isinstance(p[1], sa.declaration)):
+  #   p[0] = sa.declarationCONCRETA(p[1])
+  # elif(p[1] == 'for'):
+  #   p[0] = sa.forCONCRETA(p[1])
+  # elif(isinstance(p[1], sa.callFunc)):
+  #   p[0] = sa.callFuncCONCRETAC(p[1])
+  # elif(isinstance(p[1], sa.callFuncPS)):
+  #   p[0] = sa.callFuncPSCONCRETA(p[1])
+  # elif(p[1] == 'return'):
+  #   p[0] = sa.returnCONCRETA(p[1])
+  # elif(p[1]== 'break'):
+  #   p[0] = sa.breakCONCRETA(p[1])
+ 
 def p_for(p):
   '''for : FOR body
          | FOR exp body
@@ -162,12 +157,13 @@ def p_type(p):
     '''type : INT
             | STRING
             | BOOL'''
-    if(p[1] == 'INT'):
-      p[0] = sa.typeCONCRETA(p[1])
-    elif(p[1] == 'STRING'):
-      p[0] = sa.typeCONCRETA2(p[1])
-    else:
-      p[0] = sa.typeCONCRETA3(p[1])
+    p[0] = p[1]
+    # if(p[1] == 'INT'):
+    #   p[0] = sa.typeCONCRETA(p[1])
+    # elif(p[1] == 'STRING'):
+    #   p[0] = sa.typeCONCRETA2(p[1])
+    # else:
+    #   p[0] = sa.typeCONCRETA3(p[1])
     
 def p_exp_exp1(p):
   '''exp : exp1'''
@@ -179,7 +175,7 @@ def p_exp1(p):
              | exp2'''
     if(len(p) == 2):
       p[0] = p[1]
-    elif(p[2] == 'ASSIGN'):
+    elif(p[2] == '='):
       p[0] = sa.expASSIGN(p[1], p[3])
     else: 
       p[0] = sa.expCOLONEQ(p[1], p[3])
@@ -206,9 +202,9 @@ def p_exp4(p):
           | exp5'''
   if(len(p) == 2):
       p[0] = p[1]
-  elif(p[2] == 'EQUALS'):
+  elif(p[2] == '=='):
       p[0] = sa.expEQUALS(p[1], p[3])
-  else: 
+  elif(p[2]== '!='): 
       p[0] = sa.expDIFFERENT(p[1], p[3])
 
 def p_exp5(p):
@@ -219,13 +215,13 @@ def p_exp5(p):
           | exp6'''
   if(len(p) == 2):
       p[0] = p[1]
-  elif(p[2] == 'LESS'):
+  elif(p[2]=='<'):
       p[0] = sa.expLESS(p[1], p[3])
-  elif(p[2] == 'GREATER'): 
+  elif(p[2]=='>'): 
       p[0] = sa.expGREATER(p[1], p[3])
-  elif(p[2] == 'LESS_EQUAL'): 
+  elif(p[2]=='<='): 
       p[0] = sa.expLESS_EQUAL(p[1], p[3])
-  else:
+  elif(p[2] == '>='):
       p[0] = sa.expGREATER_EQUAL(p[1], p[3])
   
 def p_exp6(p):
@@ -234,9 +230,9 @@ def p_exp6(p):
           | exp7'''
   if(len(p) == 2):
       p[0] = p[1]
-  elif(p[2] == 'PLUS'):
+  elif(p[2] == '+'):
       p[0] = sa.expPLUS(p[1], p[3])
-  else: 
+  elif(p[2] == '-'): 
       p[0] = sa.expMINUS(p[1], p[3])
 
 def p_exp7(p):
@@ -246,11 +242,11 @@ def p_exp7(p):
           | exp8'''
   if(len(p) == 2):
       p[0] = p[1]
-  elif(p[2] == 'TIMES'):
+  elif(p[2]== '*'):
       p[0] = sa.expTIMES(p[1], p[3])
-  elif(p[2] == 'DIVIDE'): 
+  elif(p[2] =='/'): 
       p[0] = sa.expDIVIDE(p[1], p[3])
-  else:
+  elif(p[2] == '%'):
       p[0] = sa.expMOD(p[1], p[3])
 
 def p_exp8(p):
@@ -259,9 +255,9 @@ def p_exp8(p):
           | exp9'''
   if(len(p) == 2):
       p[0] = p[1]
-  elif(p[2] == 'DPLUS'):
+  elif(p[2]== '++'):
       p[0] = sa.expDPLUS(p[1])
-  else: 
+  elif(p[2] == '--'): 
       p[0] = sa.expDMINUSMINUS(p[1])
 
 def p_exp9(p):
@@ -282,20 +278,18 @@ def p_exp9(p):
       p[0] = sa.expID(p[1])
   elif(p[1] == 'TRUE'):
       p[0] = sa.expTRUE(p[1])
-  elif(p[1] == 'FALSE'):
-      p[0] = sa.expFALSE(p[1])
+  else:
+      p[0] = sa.expNUMBER(p[1])
 
 def p_return(p):
     '''return : RETURN exp
               | RETURN
               | RETURN exp SEMICOLON
               | RETURN SEMICOLON'''
-    if(len(p) == 3 ):
+    if(len(p) == 3 and p[2] != ';'):
       p[0] = sa.returnCONCRETA(p[2])
     elif(len(p) == 4):
       p[0] = sa.returnCONCRETA(p[2])
-    elif(p[2] == 'SEMICOLON'):
-      p[0] = sa.returnCONCRETA(None)
     else:
       p[0] = sa.returnCONCRETA(None)
       
