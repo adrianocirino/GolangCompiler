@@ -116,11 +116,3 @@ def t_error(t):
 
 # Ignorando tabulações e espaçoS
 t_ignore  = ' \t'
-
-#TESTE
-
-#data = '12 * 4 '
-
-#lexer = lex.lex()
-#lexer.input(data)
-

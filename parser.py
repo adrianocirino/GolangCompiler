@@ -44,7 +44,6 @@ def p_funcdecls(p):
     else:
       p[0] = sa.funcdeclsCONCRETA2(p[1], p[2])
 
-#duvida
 def p_signature(p):
   '''signature : LPAREN sigparams RPAREN 
                | LPAREN sigparams RPAREN funcreturn 
@@ -83,7 +82,7 @@ def p_body(p):
   else:
     p[0] = sa.bodyCONCRETA(None)
 
-#duvida se posso fazer apenas 1 if nesse caso
+
 def p_stms(p):
     '''stms : statement 
             | statement NEWLINE stms
@@ -97,7 +96,6 @@ def p_statement(p):
     '''statement : statement1'''
     p[0] = sa.statementCONCRETA(p[1])
 
-#duvida apartir de declaração
 def p_statement1(p):
   '''statement1 : IF exp body ELSE body
                 | IF exp body
@@ -113,18 +111,7 @@ def p_statement1(p):
     p[0] = sa.ifCONCRETA(p[2], p[3], None)
   else:
     p[0] = p[1]
-  # elif(isinstance(p[1], sa.declaration)):
-  #   p[0] = sa.declarationCONCRETA(p[1])
-  # elif(p[1] == 'for'):
-  #   p[0] = sa.forCONCRETA(p[1])
-  # elif(isinstance(p[1], sa.callFunc)):
-  #   p[0] = sa.callFuncCONCRETAC(p[1])
-  # elif(isinstance(p[1], sa.callFuncPS)):
-  #   p[0] = sa.callFuncPSCONCRETA(p[1])
-  # elif(p[1] == 'return'):
-  #   p[0] = sa.returnCONCRETA(p[1])
-  # elif(p[1]== 'break'):
-  #   p[0] = sa.breakCONCRETA(p[1])
+  
  
 def p_for(p):
   '''for : FOR body
@@ -158,12 +145,7 @@ def p_type(p):
             | STRING
             | BOOL'''
     p[0] = p[1]
-    # if(p[1] == 'INT'):
-    #   p[0] = sa.typeCONCRETA(p[1])
-    # elif(p[1] == 'STRING'):
-    #   p[0] = sa.typeCONCRETA2(p[1])
-    # else:
-    #   p[0] = sa.typeCONCRETA3(p[1])
+
     
 def p_exp_exp1(p):
   '''exp : exp1'''
@@ -331,8 +313,6 @@ def p_params(p):
 def p_error(p):
     print("Syntax error in input!")
 
-#parser = yacc.yacc()
-#parser.parse(debug = True)
 
 
 

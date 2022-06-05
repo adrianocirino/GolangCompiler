@@ -249,9 +249,3 @@ class GoSemanticVisitor(abstrataVisitor):
     paramsCONCRETA.exp.accept(self)
     if( paramsCONCRETA.params!= None):
       paramsCONCRETA.params.accept(self)
-
-  
-
-    
-
-    

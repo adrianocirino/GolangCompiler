@@ -30,6 +30,3 @@ visitor2 = vs.GoSemanticVisitor()
 
 visitor = vis.Visitor()
 result.accept(visitor)
-
-
-

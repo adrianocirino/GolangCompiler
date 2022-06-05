@@ -4,41 +4,11 @@
       {
         "id": "8f38dd73-a7d4-4256-a3e5-05f688465562",
         "line": 114,
-        "version": 2807,
+        "version": 2808,
         "index": 3850
       }
     ],
     "main.py": [
-      {
-        "id": "3198fc28-da6d-4829-8350-3bdb2ac2675e",
-        "line": 1,
-        "version": 1434,
-        "index": 0
-      },
-      {
-        "id": "9e2ac32b-6b13-4dd0-98f4-4c1f8c8a5739",
-        "line": 6,
-        "version": 1434,
-        "index": 62
-      },
-      {
-        "id": "328bf145-7e1c-4838-8102-05d9e7583bdd",
-        "line": 19,
-        "version": 1434,
-        "index": 224
-      },
-      {
-        "id": "5b1f1537-69bd-462d-9332-81977ee76b55",
-        "line": 31,
-        "version": 1434,
-        "index": 370
-      },
-      {
-        "id": "c3c2d996-831e-4077-baae-3a417dde3db8",
-        "line": 32,
-        "version": 1434,
-        "index": 416
-      },
       {
         "id": "c1ad57b8-0652-449b-9c2c-ee9815f299b2",
         "line": 36,
